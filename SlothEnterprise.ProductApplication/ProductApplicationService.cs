@@ -12,7 +12,10 @@ namespace SlothEnterprise.ProductApplication
         private readonly IConfidentialInvoiceService _confidentialInvoiceWebService;
         private readonly IBusinessLoansService _businessLoansService;
 
-        public ProductApplicationService(ISelectInvoiceService selectInvoiceService, IConfidentialInvoiceService confidentialInvoiceWebService, IBusinessLoansService businessLoansService)
+        public ProductApplicationService(
+            ISelectInvoiceService selectInvoiceService,
+            IConfidentialInvoiceService confidentialInvoiceWebService,
+            IBusinessLoansService businessLoansService)
         {
             _selectInvoiceService = selectInvoiceService;
             _confidentialInvoiceWebService = confidentialInvoiceWebService;
