@@ -2,6 +2,7 @@
 using SlothEnterprise.External.V1;
 using SlothEnterprise.ProductApplication.Applications;
 using SlothEnterprise.ProductApplication.ApplicationServicesWorkers.ConcreteServiceWorkers.V1.Mappers;
+using SlothEnterprise.ProductApplication.Exceptions;
 using SlothEnterprise.ProductApplication.Products;
 using System;
 
@@ -28,10 +29,16 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers.Concrete
             return result;
         }
 
-        public bool ValidateApplication(ISellerApplication application)
+        public IApplicationServiceWorker ValidateApplication(ISellerApplication application)
         {
-            // TODO implement validation
-            return true;
+            // TODO implement full validation
+
+            if (application.CompanyData == null)
+            {
+                throw new ProductApplicationValidationException("CompanyData could not be null");
+            }
+
+            return this;
         }
     }
 }

@@ -2,6 +2,7 @@
 using SlothEnterprise.External.V1;
 using SlothEnterprise.ProductApplication.Applications;
 using SlothEnterprise.ProductApplication.ApplicationServicesWorkers.ConcreteServiceWorkers.V1.Mappers;
+using SlothEnterprise.ProductApplication.Exceptions;
 using SlothEnterprise.ProductApplication.Products;
 using System;
 
@@ -26,10 +27,17 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers.Concrete
             return result;
         }
 
-        public bool ValidateApplication(ISellerApplication application)
+        public IApplicationServiceWorker ValidateApplication(ISellerApplication application)
         {
-            // TODO implement validation
-            return true;
+            // TODO implement full validation
+
+            var product = (BusinessLoans)application.Product;
+            if (product.Id > 0)
+            {
+                throw new ProductApplicationValidationException("BusinessLoan's Id is not specified");
+            }
+
+            return this;
         }
     }
 }

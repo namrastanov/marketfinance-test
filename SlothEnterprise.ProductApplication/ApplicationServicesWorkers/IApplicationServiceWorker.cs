@@ -6,6 +6,6 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers
     internal interface IApplicationServiceWorker
     {
         IApplicationResult SubmitApplication(ISellerApplication application);
-        bool ValidateApplication(ISellerApplication application);
+        IApplicationServiceWorker ValidateApplication(ISellerApplication application);
     }
 }

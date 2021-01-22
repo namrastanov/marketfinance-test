@@ -19,9 +19,13 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers
             {
                 return new BusinessLoansServiceWorker(_serviceProvider);
             }
-            if (product is ConfidentialInvoiceDiscount)
+            else if (product is ConfidentialInvoiceDiscount)
             {
                 return new ConfidentialInvoiceServiceWorker(_serviceProvider);
+            }
+            else if (product is SelectiveInvoiceDiscount)
+            {
+                return new SelectInvoiceServiceWorker(_serviceProvider);
             }
 
             throw new InvalidOperationException();
