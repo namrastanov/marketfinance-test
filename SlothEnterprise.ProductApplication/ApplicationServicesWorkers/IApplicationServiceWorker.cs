@@ -5,7 +5,10 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers
 {
     internal interface IApplicationServiceWorker
     {
-        IApplicationResult SubmitApplication(ISellerApplication application);
-        IApplicationServiceWorker ValidateApplication(ISellerApplication application);
+        IApplicationServiceWorker SetApplication(ISellerApplication application);
+        IApplicationServiceWorker Submit();
+        IApplicationServiceWorker Validate();
+        IApplicationServiceWorker CheckErrors();
+        IApplicationResult GetResult();
     }
 }

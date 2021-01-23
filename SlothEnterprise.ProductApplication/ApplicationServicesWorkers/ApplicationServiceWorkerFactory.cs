@@ -1,4 +1,5 @@
 ﻿using SlothEnterprise.ProductApplication.ApplicationServicesWorkers.ConcreteServiceWorkers.V1;
+using SlothEnterprise.ProductApplication.Exceptions;
 using SlothEnterprise.ProductApplication.Products;
 using System;
 
@@ -28,7 +29,7 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers
                 return new SelectInvoiceServiceWorker(_serviceProvider);
             }
 
-            throw new InvalidOperationException();
+            throw new ProductApplicationException("Product is not supported");
         }
     }
 }

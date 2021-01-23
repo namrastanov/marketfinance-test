@@ -8,7 +8,7 @@ using System;
 
 namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers.ConcreteServiceWorkers.V1
 {
-    internal class BusinessLoansServiceWorker : IApplicationServiceWorker
+    internal class BusinessLoansServiceWorker : BaseApplicationServiceWorker, IApplicationServiceWorker
     {
         private readonly IBusinessLoansService _businessLoansService;
 
@@ -17,21 +17,21 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers.Concrete
             _businessLoansService = (IBusinessLoansService)serviceProvider.GetService(typeof(IBusinessLoansService));
         }
 
-        public IApplicationResult SubmitApplication(ISellerApplication application)
+        public override IApplicationServiceWorker Submit()
         {
-            var product = (BusinessLoans)application.Product;
-            var result = _businessLoansService.SubmitApplicationFor(
-                CompanyDataRequestMapping.MapFromSellerCompanyData(application.CompanyData),
+            var product = (BusinessLoans)Application.Product;
+            ApplicationResult = _businessLoansService.SubmitApplicationFor(
+                CompanyDataRequestMapping.MapFromSellerCompanyData(Application.CompanyData),
                 LoansRequestMapping.MapFromLoansProduct(product));
 
-            return result;
+            return this;
         }
 
-        public IApplicationServiceWorker ValidateApplication(ISellerApplication application)
+        public override IApplicationServiceWorker Validate()
         {
             // TODO implement full validation
 
-            var product = (BusinessLoans)application.Product;
+            var product = (BusinessLoans)Application.Product;
             if (product.Id > 0)
             {
                 throw new ProductApplicationValidationException("BusinessLoan's Id is not specified");

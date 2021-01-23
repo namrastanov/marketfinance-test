@@ -1,6 +1,4 @@
-﻿using SlothEnterprise.External;
-using SlothEnterprise.External.V1;
-using SlothEnterprise.ProductApplication.Applications;
+﻿using SlothEnterprise.External.V1;
 using SlothEnterprise.ProductApplication.ApplicationServicesWorkers.ConcreteServiceWorkers.V1.Mappers;
 using SlothEnterprise.ProductApplication.Exceptions;
 using SlothEnterprise.ProductApplication.Products;
@@ -8,7 +6,7 @@ using System;
 
 namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers.ConcreteServiceWorkers.V1
 {
-    internal class ConfidentialInvoiceServiceWorker : IApplicationServiceWorker
+    internal class ConfidentialInvoiceServiceWorker : BaseApplicationServiceWorker, IApplicationServiceWorker
     {
         private readonly IConfidentialInvoiceService _confidentialInvoiceService;
 
@@ -17,23 +15,23 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers.Concrete
             _confidentialInvoiceService = (IConfidentialInvoiceService)serviceProvider.GetService(typeof(IConfidentialInvoiceService));
         }
 
-        public IApplicationResult SubmitApplication(ISellerApplication application)
+        public override IApplicationServiceWorker Submit()
         {
-            var product = (ConfidentialInvoiceDiscount)application.Product;
-            var result = _confidentialInvoiceService.SubmitApplicationFor(
-                CompanyDataRequestMapping.MapFromSellerCompanyData(application.CompanyData),
+            var product = (ConfidentialInvoiceDiscount)Application.Product;
+            ApplicationResult = _confidentialInvoiceService.SubmitApplicationFor(
+                CompanyDataRequestMapping.MapFromSellerCompanyData(Application.CompanyData),
                 product.TotalLedgerNetworth,
                 product.AdvancePercentage,
                 product.VatRate);
 
-            return result;
+            return this;
         }
 
-        public IApplicationServiceWorker ValidateApplication(ISellerApplication application)
+        public override IApplicationServiceWorker Validate()
         {
             // TODO implement full validation
 
-            if (application.CompanyData == null)
+            if (Application.CompanyData == null)
             {
                 throw new ProductApplicationValidationException("CompanyData could not be null");
             }

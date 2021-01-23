@@ -6,19 +6,22 @@ namespace SlothEnterprise.ProductApplication
 {
     public class ProductApplicationService : IProductApplicationService
     {
-        private readonly ApplicationServiceWorkerFactory _serviceFactory;
+        private readonly ApplicationServiceWorkerFactory _serviceWorkerFactory;
 
         public ProductApplicationService(IServiceProvider serviceProvider)
         {
-            _serviceFactory = new ApplicationServiceWorkerFactory(serviceProvider);
+            _serviceWorkerFactory = new ApplicationServiceWorkerFactory(serviceProvider);
         }
 
         public int SubmitApplicationFor(ISellerApplication application)
         {
-            var applicationResult = _serviceFactory
+            var applicationResult = _serviceWorkerFactory
                 .GetWorker(application.Product)
-                .ValidateApplication(application)
-                .SubmitApplication(application);
+                .SetApplication(application)
+                .Validate()
+                .Submit()
+                .CheckErrors()
+                .GetResult();
 
             return applicationResult.Success ? applicationResult.ApplicationId ?? -1 : -1;
         }
