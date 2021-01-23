@@ -2,6 +2,8 @@
 using SlothEnterprise.ProductApplication.Exceptions;
 using SlothEnterprise.ProductApplication.Products;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers
 {
@@ -9,24 +11,26 @@ namespace SlothEnterprise.ProductApplication.ApplicationServicesWorkers
     {
         private readonly IServiceProvider _serviceProvider;
 
+        private readonly IDictionary<Type, Type> _productServiceWorkerMap
+            = new Dictionary<Type, Type>()
+        {
+            { typeof(SelectiveInvoiceDiscount), typeof(SelectInvoiceServiceWorker) },
+            { typeof(ConfidentialInvoiceDiscount), typeof(ConfidentialInvoiceServiceWorker) },
+            { typeof(BusinessLoans), typeof(BusinessLoansServiceWorker) }
+        };
+
         public ApplicationServiceWorkerFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public IApplicationServiceWorker GetWorker(IProduct product)
+        public IApplicationServiceWorker GetServiceWorker(IProduct product)
         {
-            if (product is BusinessLoans)
+            var workerItem = _productServiceWorkerMap.FirstOrDefault(p => p.Key.Equals(product.GetType()));
+
+            if (workerItem.Value != null)
             {
-                return new BusinessLoansServiceWorker(_serviceProvider);
-            }
-            else if (product is ConfidentialInvoiceDiscount)
-            {
-                return new ConfidentialInvoiceServiceWorker(_serviceProvider);
-            }
-            else if (product is SelectiveInvoiceDiscount)
-            {
-                return new SelectInvoiceServiceWorker(_serviceProvider);
+                return (IApplicationServiceWorker)Activator.CreateInstance(workerItem.Value, _serviceProvider);
             }
 
             throw new ProductApplicationException("Product is not supported");

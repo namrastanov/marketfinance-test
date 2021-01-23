@@ -16,7 +16,7 @@ namespace SlothEnterprise.ProductApplication
         public int SubmitApplicationFor(ISellerApplication application)
         {
             var applicationResult = _serviceWorkerFactory
-                .GetWorker(application.Product)
+                .GetServiceWorker(application.Product)
                 .SetApplication(application)
                 .Validate()
                 .Submit()
